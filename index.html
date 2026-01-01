@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAMMA SAAVARI - Travel & Bookings</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">NAMMA SAAVARI<span class="dot">.</span></a>
+            <div class="nav-links">
+                <a href="#destinations">Destinations</a>
+                <a href="#tours">Tours</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="nav-auth" id="auth-buttons">
+                <a href="login.html" class="btn btn-secondary">Log In</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <div class="user-profile" id="user-profile"
+                style="display: none; align-items: center; gap: 10px; cursor: pointer;">
+                <span class="user-name" style="font-weight: 500;">Hello, Traveler</span>
+                <div class="avatar"
+                    style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    <i data-lucide="user"></i>
+                </div>
+            </div>
+            <button class="mobile-menu-btn">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop"
+                alt="Beautiful Landscape" id="hero-img">
+            <div class="overlay"></div>
+        </div>
+        <div class="hero-content container">
+            <h1>India's Most Trusted <br><span class="highlight">Bus Booking Platform</span></h1>
+            <p>Travel across thousands of routes with safety and comfort. Book your bus tickets today.</p>
+
+            <!-- Search Widget -->
+            <!-- Bus Search Widget -->
+            <div class="search-widget">
+                <div class="search-item">
+                    <i data-lucide="bus-front"></i>
+                    <div class="input-group">
+                        <label>From</label>
+                        <input type="text" id="from-location" placeholder="Departure City">
+                    </div>
+                </div>
+                <div class="search-item">
+                    <i data-lucide="map-pin"></i>
+                    <div class="input-group">
+                        <label>To</label>
+                        <input type="text" id="to-location" placeholder="Destination City">
+                    </div>
+                </div>
+                <div class="search-item">
+                    <i data-lucide="calendar"></i>
+                    <div class="input-group">
+                        <label>Journey Date</label>
+                        <input type="date">
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-search">
+                    <i data-lucide="search"></i>
+                    Search Buses
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+
+    <!-- Bus Search Results (Hidden by default) -->
+    <section id="bus-results" class="section bus-results" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2 id="results-title">Available Buses</h2>
+                <p>Select the best bus for your journey</p>
+            </div>
+            <div class="bus-list" id="bus-list-container">
+                <!-- Bus items will be injected here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Seat Selection Modal -->
+    <div id="seat-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Seats</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="bus-layout">
+                    <div class="driver-cabin">
+                        <i data-lucide="steering-wheel"></i>
+                        <span class="driver-label">Driver</span>
+                    </div>
+                    <!-- Seat Grid will be injected here -->
+                    <div class="seats-container" id="seats-grid"></div>
+                </div>
+                <div class="seat-legend">
+                    <div class="legend-item"><span class="seat available"></span> Available</div>
+                    <div class="legend-item"><span class="seat booked"></span> Booked</div>
+                    <div class="legend-item"><span class="seat selected"></span> Selected</div>
+                    <div class="legend-item"><span class="seat female"></span> Female</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="selected-info">
+                    <span>Seats: <b id="selected-seats-count">0</b></span>
+                    <span>Total: ₹<b id="total-price">0</b></span>
+                </div>
+                <button class="btn btn-primary" id="confirm-booking-btn">Confirm Booking</button>
+            </div>
+        </div>
+        <!-- Places to Visit Modal -->
+        <div id="places-modal" class="modal">
+            <div class="modal-content" style="max-width: 800px;">
+                <div class="modal-header">
+                    <h3 id="places-title">Famous Places in Karnataka</h3>
+                    <span class="close-places-modal" style="font-size: 28px; cursor: pointer;">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="places-grid" id="places-grid">
+                        <!-- Places will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Explore India -->
+        <section id="destinations" class="section destinations">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Explore India</h2>
+                    <p>Discover the beauty of India. From metro cities to hidden taluks.</p>
+                </div>
+
+                <!-- Region Filter (Visual only) -->
+                <div class="filter-tabs"
+                    style="display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap;">
+                    <button class="btn btn-outline active"
+                        style="background: var(--primary); color: white;">All</button>
+                    <button class="btn btn-outline">South India</button>
+                    <button class="btn btn-outline">North India</button>
+                    <button class="btn btn-outline">East India</button>
+                    <button class="btn btn-outline">West India</button>
+                </div>
+
+                <div class="destinations-grid">
+                    <!-- Hyderabad -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="images/hyderabad.png" alt="Hyderabad">
+                            <div class="rating"><i data-lucide="star"></i> 4.8</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Hyderabad</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Telangana</p>
+                            <div class="card-footer">
+                                <span class="price">Charminar</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bangalore -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1596176530529-78163a4f7af2?q=80&w=1000&auto=format&fit=crop"
+                                alt="Bangalore">
+                            <div class="rating"><i data-lucide="star"></i> 4.7</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Bangalore</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Karnataka</p>
+                            <div class="card-footer">
+                                <span class="price">Tech Hub</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Karnataka -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1620766182966-c6eb3d35b926?q=80&w=1000&auto=format&fit=crop"
+                                alt="Karnataka">
+                            <div class="rating"><i data-lucide="star"></i> 4.8</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Karnataka</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Karnataka</p>
+                            <div class="card-footer">
+                                <span class="price">Hampi & Coorg</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delhi -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="images/delhi.png" alt="Delhi">
+                            <div class="rating"><i data-lucide="star"></i> 4.9</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>New Delhi</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> NCR</p>
+                            <div class="card-footer">
+                                <span class="price">India Gate</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kolkata -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1558431382-27e30314225d?q=80&w=1000&auto=format&fit=crop"
+                                alt="Kolkata">
+                            <div class="rating"><i data-lucide="star"></i> 4.6</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Kolkata</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> West Bengal</p>
+                            <div class="card-footer">
+                                <span class="price">Victoria Memorial</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- West Bengal -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1544634076-a901606f47b9?q=80&w=1000&auto=format&fit=crop"
+                                alt="West Bengal">
+                            <div class="rating"><i data-lucide="star"></i> 4.7</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>West Bengal</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> West Bengal</p>
+                            <div class="card-footer">
+                                <span class="price">Darjeeling</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Maharashtra -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1570168007204-dfb528c6958f?q=80&w=1000&auto=format&fit=crop"
+                                alt="Mumbai">
+                            <div class="rating"><i data-lucide="star"></i> 4.8</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Maharashtra</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> West India</p>
+                            <div class="card-footer">
+                                <span class="price">Gateway of India</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Punjab -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1514222134-b57cbb8ce073?q=80&w=1000&auto=format&fit=crop"
+                                alt="Punjab">
+                            <div class="rating"><i data-lucide="star"></i> 5.0</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Punjab</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> North India</p>
+                            <div class="card-footer">
+                                <span class="price">Golden Temple</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kerala -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1000&auto=format&fit=crop"
+                                alt="Kerala">
+                            <div class="rating"><i data-lucide="star"></i> 4.9</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Kerala</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Kerala</p>
+                            <div class="card-footer">
+                                <span class="price">Backwaters</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tamil Nadu -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1533596912328-98e983445e99?q=80&w=1000&auto=format&fit=crop"
+                                alt="Tamil Nadu">
+                            <div class="rating"><i data-lucide="star"></i> 4.7</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Tamil Nadu</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Tamil Nadu</p>
+                            <div class="card-footer">
+                                <span class="price">Ooty</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Andhra Pradesh -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1605621415053-c55c04c6f50e?q=80&w=1000&auto=format&fit=crop"
+                                alt="Andhra Pradesh">
+                            <div class="rating"><i data-lucide="star"></i> 4.6</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Andhra Pradesh</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Andhra Pradesh</p>
+                            <div class="card-footer">
+                                <span class="price">Araku Valley</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <p style="margin-bottom: 20px; color: var(--text-light);">Browse by State, District, or Taluk</p>
+                    <div
+                        style="display: flex; justify-content: center; gap: 10px; max-width: 600px; margin: 0 auto; flex-wrap: wrap;">
+                        <select id="state-select"
+                            style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; flex: 1; min-width: 150px;">
+                            <option value="">Select State</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="West Bengal">West Bengal</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Delhi">Delhi</option>
+                        </select>
+                        <select id="district-select"
+                            style="padding: 12px; border: 1px solid #ddd; border-radius: 8px; flex: 1; min-width: 150px;">
+                            <option value="">Select District</option>
+                        </select>
+                        <button class="btn btn-primary">Go</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- International Destinations (Restored) -->
+        <section id="international" class="section destinations" style="background-color: #f9f9f9;">
+            <div class="container">
+                <div class="section-header">
+                    <h2>International Getaways</h2>
+                    <p>Explore the world's most stunning destinations.</p>
+                </div>
+
+                <div class="destinations-grid">
+                    <!-- Paris -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1000&auto=format&fit=crop"
+                                alt="Paris">
+                            <div class="rating"><i data-lucide="star"></i> 4.9</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Paris</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> France</p>
+                            <div class="card-footer">
+                                <span class="price">$1,200</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bali -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1000&auto=format&fit=crop"
+                                alt="Bali">
+                            <div class="rating"><i data-lucide="star"></i> 4.8</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Bali</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Indonesia</p>
+                            <div class="card-footer">
+                                <span class="price">$800</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tokyo -->
+                    <div class="card destination-card">
+                        <div class="card-image">
+                            <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?q=80&w=1000&auto=format&fit=crop"
+                                alt="Tokyo">
+                            <div class="rating"><i data-lucide="star"></i> 4.9</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Tokyo</h3>
+                            <p class="location"><i data-lucide="map-pin"></i> Japan</p>
+                            <div class="card-footer">
+                                <span class="price">$1,500</span>
+                                <button class="btn btn-outline">Explore</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="section features">
+            <div class="container">
+                <div class="feature-item">
+                    <div class="icon-box"><i data-lucide="shield-check"></i></div>
+                    <h3>Safe Traveling</h3>
+                    <p>We ensure strict safety standards for all our tours and accommodations.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon-box"><i data-lucide="wallet"></i></div>
+                    <h3>Best Prices</h3>
+                    <p>We guarantee the best prices for your dream vacation packages.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="icon-box"><i data-lucide="headset"></i></div>
+                    <h3>24/7 Support</h3>
+                    <p>Our support team is available around the clock to assist you.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-col">
+                    <a href="#" class="logo">NAMMA SAAVARI<span class="dot">.</span></a>
+                    <p>Making your travel dreams a reality. Book with confidence and explore the world.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="#">Home</a>
+                    <a href="#destinations">Destinations</a>
+                    <a href="#">Tours</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for the latest deals and updates.</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button class="btn btn-primary">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NAMMA SAAVARI Travel. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script src="js/main.js"></script>
+        <script>
+            lucide.createIcons();
+        </script>
+</body>
+
+</html>

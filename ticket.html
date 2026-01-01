@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket - NAMMA SAAVARI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .ticket-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticket-header {
+            background: var(--dark);
+            color: #fff;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-header h2 {
+            color: #fff;
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .ticket-body {
+            padding: 30px;
+        }
+
+        .pnr-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 20px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .route-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .route-point {
+            text-align: left;
+        }
+
+        .route-point.end {
+            text-align: right;
+        }
+
+        .route-arrow {
+            color: var(--primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .bill-section {
+            border-top: 2px solid #eee;
+            padding-top: 20px;
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .bill-row.total {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-top: 10px;
+        }
+
+        .ticket-footer {
+            background: var(--primary);
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .ticket-footer:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Jagged edge effect */
+        .ticket-container::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(45deg, transparent 33.333%, #f0f2f5 33.333%, #f0f2f5 66.667%, transparent 66.667%),
+                linear-gradient(-45deg, transparent 33.333%, #f0f2f5 33.333%, #f0f2f5 66.667%, transparent 66.667%);
+            background-size: 20px 40px;
+            background-position: 0 10px;
+            /* Hide footer bottom if needed or adjust */
+            display: none;
+            /* Keeping it simple for now */
+        }
+
+        .status-badge {
+            background: #d4edda;
+            color: #155724;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+            }
+
+            .ticket-container {
+                box-shadow: none;
+                margin: 0;
+                border: 1px solid #ddd;
+            }
+
+            .ticket-footer {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ticket-container">
+        <div class="ticket-header">
+            <div class="brand">
+                <h2>NAMMA SAAVARI</h2>
+            </div>
+            <div class="status-badge">BOOKING CONFIRMED</div>
+        </div>
+
+        <div class="ticket-body">
+            <div class="pnr-row">
+                <div>
+                    <div class="label">PNR Number</div>
+                    <div class="value" id="pnr-val">849302219</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="label">Booking Date</div>
+                    <div class="value" id="booking-date">26 Dec 2025</div>
+                </div>
+            </div>
+
+            <div class="route-row">
+                <div class="route-point">
+                    <div class="label">From</div>
+                    <div class="value" style="font-size: 18px;" id="tkt-from">Bangalore</div>
+                    <div class="label" style="margin-top: 4px;">21:30 PM</div>
+                </div>
+                <div class="route-arrow">
+                    <i data-lucide="bus-front" style="color: var(--primary); margin-bottom: 5px;"></i>
+                    <span>8h 30m</span>
+                </div>
+                <div class="route-point end">
+                    <div class="label">To</div>
+                    <div class="value" style="font-size: 18px;" id="tkt-to">Mumbai</div>
+                    <div class="label" style="margin-top: 4px;">06:00 AM</div>
+                </div>
+            </div>
+
+            <div class="details-grid">
+                <div>
+                    <div class="label">Passenger Name</div>
+                    <div class="value">Mr. Traveler</div>
+                </div>
+                <div>
+                    <div class="label">Bus Operator</div>
+                    <div class="value" id="tkt-bus">VRL Logistics</div>
+                </div>
+                <div>
+                    <div class="label">Bus Type</div>
+                    <div class="value">A/C Sleeper (2+1)</div>
+                </div>
+                <div>
+                    <div class="label">Seat Number(s)</div>
+                    <div class="value" id="tkt-seats" style="color: var(--primary);">U1, U2</div>
+                </div>
+            </div>
+
+            <div class="bill-section">
+                <div class="bill-row">
+                    <span>Ticket Fee</span>
+                    <span id="bill-base">₹1400</span>
+                </div>
+                <div class="bill-row">
+                    <span>GST (5%)</span>
+                    <span id="bill-gst">₹70</span>
+                </div>
+                <div class="bill-row total">
+                    <span>Grand Total</span>
+                    <span style="color: var(--primary);" id="bill-total">₹1500</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <i data-lucide="qr-code" style="width: 80px; height: 80px; color: var(--dark);"></i>
+                <p style="font-size: 10px; color: #999; margin-top: 5px;">Scan to Validate</p>
+            </div>
+        </div>
+
+        <div class="ticket-footer" onclick="window.print()">
+            <i data-lucide="printer"
+                style="width: 16px; display: inline-block; vertical-align: middle; margin-right: 5px;"></i>
+            Print / Download Ticket
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 40px;">
+        <a href="index.html" class="btn btn-outline"
+            style=" background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 12px 24px; border-radius: 50px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+            <i data-lucide="arrow-left"></i> Continue Booking
+        </a>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Populate Data
+        const params = new URLSearchParams(window.location.search);
+        const total = parseInt(params.get('amount') || '1500');
+        const seats = params.get('seats') || 'A1';
+
+        // PNR Gen
+        document.getElementById('pnr-val').innerText = 'NS' + Math.floor(Math.random() * 10000000);
+
+        // Date
+        const d = new Date();
+        document.getElementById('booking-date').innerText = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+
+        document.getElementById('tkt-seats').innerText = seats;
+        document.getElementById('bill-total').innerText = '₹' + total;
+
+        // Reverse calc base + gst for realism
+        const base = Math.round(total / 1.05);
+        const gst = total - base;
+
+        document.getElementById('bill-base').innerText = '₹' + base;
+        document.getElementById('bill-gst').innerText = '₹' + gst;
+
+    </script>
+</body>
+
+</html>

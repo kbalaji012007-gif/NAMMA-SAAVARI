@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - NAMMA SAAVARI</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .payment-container {
+            max-width: 800px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+        }
+
+        .payment-methods {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .booking-summary {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .method-item {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .method-item:hover,
+        .method-item.active {
+            border-color: var(--primary);
+            background: rgba(0, 180, 216, 0.05);
+        }
+
+        .method-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 50%;
+            color: var(--dark);
+        }
+
+        .method-info h4 {
+            margin: 0 0 4px;
+            font-size: 16px;
+        }
+
+        .method-info p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .total-row {
+            border-top: 1px dashed #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--dark);
+        }
+
+        .qr-section {
+            text-align: center;
+            display: none;
+            /* Hidden by default */
+            margin-top: 20px;
+        }
+
+        .qr-placeholder {
+            width: 200px;
+            height: 200px;
+            background: #f8f9fa;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body style="background-color: #f8f9fa;">
+
+    <!-- Simplified Navbar -->
+    <nav class="navbar" style="background: #fff; height: 60px;">
+        <div class="container">
+            <a href="index.html" class="logo">NAMMA SAAVARI<span class="dot">.</span></a>
+        </div>
+    </nav>
+
+    <div class="payment-container">
+        <div class="payment-header">
+            <h2>Secure Payment</h2>
+            <p>Complete your booking securely using your preferred method.</p>
+        </div>
+
+        <div class="payment-grid">
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+                <h3 style="margin-bottom: 20px;">Choose Payment Method</h3>
+
+                <!-- UPI / Apps -->
+                <div class="method-item" onclick="selectMethod(this, 'upi')">
+                    <div class="method-icon"><i data-lucide="smartphone"></i></div>
+                    <div class="method-info">
+                        <h4>UPI Apps</h4>
+                        <p>Google Pay, PhonePe, Paytm</p>
+                    </div>
+                </div>
+
+                <!-- Card -->
+                <div class="method-item" onclick="selectMethod(this, 'card')">
+                    <div class="method-icon"><i data-lucide="credit-card"></i></div>
+                    <div class="method-info">
+                        <h4>Credit / Debit Card</h4>
+                        <p>Visa, MasterCard, RuPay</p>
+                    </div>
+                </div>
+
+                <!-- Net Banking -->
+                <div class="method-item" onclick="selectMethod(this, 'building')">
+                    <div class="method-icon"><i data-lucide="landmark"></i></div>
+                    <div class="method-info">
+                        <h4>Net Banking</h4>
+                        <p>All Indian Banks supported</p>
+                    </div>
+                </div>
+
+                <!-- QR Code Section (Dynamic) -->
+                <div id="upi-section" class="qr-section">
+                    <p style="margin-bottom: 10px;">Scan QR to Pay</p>
+                    <div class="qr-placeholder">
+                        <i data-lucide="qr-code" style="width: 64px; height: 64px; color: var(--text-light);"></i>
+                        <!-- In real app, generate actual QR here -->
+                    </div>
+                    <p class="text-xs" style="color: var(--text-light);">Waiting for payment...</p>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="booking-summary">
+                <h3 style="margin-bottom: 20px;">Booking Summary</h3>
+                <div class="summary-row">
+                    <span>From</span>
+                    <span id="summ-from">Bangalore</span>
+                </div>
+                <div class="summary-row">
+                    <span>To</span>
+                    <span id="summ-to">Mysore</span>
+                </div>
+                <div class="summary-row">
+                    <span>Bus Type</span>
+                    <span id="summ-bus">VRL Logistics (A/C)</span>
+                </div>
+                <div class="summary-row">
+                    <span>Seats</span>
+                    <span id="summ-seats">U1, U2</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total Amount</span>
+                    <span style="color: var(--primary);">₹<span id="summ-total">1500</span></span>
+                </div>
+
+                <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="processPayment()">
+                    Pay Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Parse Query Params
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById('summ-total').innerText = urlParams.get('amount') || '0';
+        document.getElementById('summ-seats').innerText = urlParams.get('seats') || '-';
+
+        // Mock From/To/Bus (In real app, pass these too or store in localStorage)
+        // For demo visual consistency layout default
+
+        function selectMethod(el, type) {
+            // Reset classes
+            document.querySelectorAll('.method-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+
+            // Show QR for UPI, Hide for others for demo
+            const upiSection = document.getElementById('upi-section');
+            if (type === 'upi') {
+                upiSection.style.display = 'block';
+            } else {
+                upiSection.style.display = 'none';
+            }
+        }
+
+        function processPayment() {
+            const btn = document.querySelector('.btn-primary');
+            btn.innerHTML = 'Processing...';
+            btn.style.opacity = '0.7';
+
+            setTimeout(() => {
+                alert('Payment Successful!');
+                const urlParams = new URLSearchParams(window.location.search);
+                const amt = urlParams.get('amount');
+                const sts = urlParams.get('seats');
+                window.location.href = `ticket.html?amount=${amt}&seats=${sts}`;
+            }, 2000);
+        }
+    </script>
+</body>
+
+</html>
